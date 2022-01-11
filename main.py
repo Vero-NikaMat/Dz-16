@@ -117,7 +117,7 @@ for off in offer:
 
 
 @app.route('/users', methods=['GET', 'POST'])
-def step_3():
+def step_3and6():
     if request.method == 'GET':
         users = db.session.query(User).all()
         result = []
@@ -140,7 +140,7 @@ def step_3():
 
 
 @app.route('/users/<int:ind>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def step_3_ind(ind:int):
+def step_3_6_ind(ind:int):
     if request.method == 'GET':
         user = User.query.get(ind)
         result = user.to_dict()
@@ -159,21 +159,46 @@ def step_3_ind(ind:int):
 
 
 @app.route('/orders', methods=['GET', 'POST'])
-def step_4():
+def step_4and7():
     if request.method == 'GET':
         orders = db.session.query(Order).all()
         result = []
         for ord in orders:
             result.append(ord.to_dict())
-    return jsonify(result)
+        return jsonify(result)
+    elif request.method == 'POST':
+        new_order = Order(
+            id=50,
+            name='new name',
+            description='new description',
+            start_date='01/01/2022',
+            end_date='11/01/2022',
+            address='new address',
+            price=100,
+            customer_id=5,
+            executor_id=10
+        )
+        db.session.add(new_order)
+        db.session.commit()
 
 
-@app.route('/orders/<int:ind>', methods=['GET', 'POST'])
-def step_4_ind(ind:int):
+@app.route('/orders/<int:ind>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def step_4_7_ind(ind:int):
     if request.method == 'GET':
         order_ = Order.query.get(ind)
         result = order_.to_dict()
-    return jsonify(result)
+        return jsonify(result)
+    elif request.method == 'PUT':
+        order = Order.query.get(ind)
+        order.start_date = '12/01/2022'
+        db.session.add(order)
+        db.session.commit()
+        return f"Заказ {ind} обновлен"
+    elif request.method == 'DELETE':
+        order = Order.query.get(ind)
+        db.session.delete(order)
+        db.session.commit()
+        return f"Заказ {ind} удален"
 
 
 @app.route('/offers', methods=['GET', 'POST'])
