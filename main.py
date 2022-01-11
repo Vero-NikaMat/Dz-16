@@ -138,9 +138,8 @@ def step_3and6():
         db.session.commit()
 
 
-
 @app.route('/users/<int:ind>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def step_3_6_ind(ind:int):
+def step_3_6_ind(ind: int):
     if request.method == 'GET':
         user = User.query.get(ind)
         result = user.to_dict()
@@ -183,7 +182,7 @@ def step_4and7():
 
 
 @app.route('/orders/<int:ind>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def step_4_7_ind(ind:int):
+def step_4_7_ind(ind: int):
     if request.method == 'GET':
         order_ = Order.query.get(ind)
         result = order_.to_dict()
@@ -208,16 +207,34 @@ def step_5():
         result = []
         for offer_ in offers_:
             result.append(offer_.to_dict())
-    return jsonify(result)
+        return jsonify(result)
+    elif request.method == 'POST':
+        new_offer = Order(
+            id=70,
+            order_id=20,
+            executor_id=30
+        )
+        db.session.add(new_offer)
+        db.session.commit()
 
 
-@app.route('/offers/<int:ind>', methods=['GET', 'POST'])
-def step_5_ind(ind:int):
+@app.route('/offers/<int:ind>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def step_5_ind(ind: int):
     if request.method == 'GET':
         offer_ = Offer.query.get(ind)
         result = offer_.to_dict()
-    return jsonify(result)
-
+        return jsonify(result)
+    elif request.method == 'PUT':
+        offer = Offer.query.get(ind)
+        offer.order_id = 25
+        db.session.add(offer)
+        db.session.commit()
+        return f"Предложение {ind} обновлено"
+    elif request.method == 'DELETE':
+        offer = Offer.query.get(ind)
+        db.session.delete(offer)
+        db.session.commit()
+        return f"Предложение {ind} удалено"
 
 
 if __name__ == '__main__':
