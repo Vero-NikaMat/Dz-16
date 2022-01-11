@@ -237,5 +237,6 @@ def step_5_ind(ind: int):
         return f"Предложение {ind} удалено"
 
 
+
 if __name__ == '__main__':
     app.run(debug=True)
